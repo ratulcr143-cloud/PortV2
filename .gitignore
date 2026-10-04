@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Environment & secrets
+.env
+.env.*
+*.pem
+*.key
+
+# OS & editor
+.DS_Store
+Thumbs.db
+*.log
+.cursor/
+
+# Local uploads (not part of site)
+attachments/

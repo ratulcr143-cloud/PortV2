@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Portfolio cover">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="45%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+    <radialGradient id="r" cx="70%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#030308" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#030308"/>
+  <rect width="1200" height="630" fill="url(#r)"/>
+  <circle cx="180" cy="520" r="220" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <circle cx="1020" cy="120" r="160" fill="none" stroke="rgba(56,189,248,0.2)" stroke-width="1"/>
+  <text x="80" y="280" fill="#f4f2ff" font-family="system-ui,sans-serif" font-size="72" font-weight="800" letter-spacing="-2">Ratul</text>
+  <text x="80" y="350" fill="#9490a8" font-family="system-ui,sans-serif" font-size="32" font-weight="500">Full-stack developer � Portfolio</text>
+  <rect x="80" y="400" width="280" height="6" rx="3" fill="url(#g)"/>
+</svg>

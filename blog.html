@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Blog — notes on building, design, and code." />
+    <title>Ratul · Blog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-page="blog">
+    <div class="loader" id="loader" aria-hidden="true">
+      <div class="loader-orbit"></div>
+      <p class="loader-text">Loading</p>
+      <div class="loader-bar"><span></span></div>
+    </div>
+
+    <div class="cursor" id="cursor" aria-hidden="true"></div>
+    <div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+
+    <canvas id="webgl" aria-hidden="true"></canvas>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="grid-floor" aria-hidden="true"></div>
+
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header is-scrolled" id="top">
+      <nav class="nav glass" aria-label="Primary">
+        <a class="nav-logo" href="index.html">
+          <span class="nav-logo-mark" aria-hidden="true"></span>
+          <span data-profile="name">Ratul</span>
+        </a>
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="nav-menu"
+          aria-label="Open menu"
+        >
+          <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-menu" id="nav-menu">
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="index.html#work">Experience</a></li>
+          <li><a href="index.html#projects">Projects</a></li>
+          <li><a href="blog.html" data-nav-page="blog">Blog</a></li>
+          <li><a href="resume.html" data-nav-page="resume">Resume</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main" class="page-main">
+      <header class="page-hero">
+        <div class="container page-hero-inner">
+          <p class="chip">Writing</p>
+          <h1 class="page-title">Blog</h1>
+          <p class="page-lead" id="blog-intro">
+            Thoughts on engineering, design, and shipping real work.
+          </p>
+        </div>
+      </header>
+
+      <section class="section section--blog" aria-label="Blog posts">
+        <div class="container">
+          <div class="blog-list" id="blog-list"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-row">
+        <p>
+          <span data-profile="name">Ratul</span>
+          <span class="muted">·</span>
+          <span id="footer-year"></span>
+        </p>
+        <a href="index.html" class="footer-link">← Back to home</a>
+      </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="site.config.js"></script>
+    <script src="common.js"></script>
+    <script src="scene3d.js"></script>
+    <script src="blog.js"></script>
+  </body>
+</html>
