@@ -1,34 +1,18 @@
-# Deploy to GitHub Pages
+# GitHub Pages deployment
 
-## One-time setup
+The site is deployed as a static GitHub Pages site by
+[`.github/workflows/pages.yml`](.github/workflows/pages.yml).
 
-1. Create a new repository on GitHub (e.g. `PortfolioV1`). Do **not** add a README if you already have this project locally.
-
-2. In the repo folder, add the remote and push:
-
-```bash
-cd D:\PortfolioV1
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
-git push -u origin main
+```powershell
+npm install
+npm run validate:frontend
 ```
 
-3. On GitHub: **Settings → Pages → Build and deployment**
-   - **Source:** GitHub Actions
+In the repository settings, set **Pages → Build and deployment → Source** to
+**GitHub Actions**. The custom domain is configured by the `CNAME` file as
+`ratulcr.dev`; point the domain's DNS at GitHub Pages as described in GitHub's
+custom-domain documentation.
 
-4. After the first push, open **Actions** and wait for **Deploy GitHub Pages** to finish.
-
-5. Your site will be at:
-
-   `https://YOUR_USERNAME.github.io/YOUR_REPO/`
-
-6. Optional: set `seo.siteUrl` in `site.config.js` to that URL (no trailing slash) and update `sitemap.xml` loc URLs.
-
-## Updates
-
-```bash
-git add -A
-git commit -m "Describe your change"
-git push
-```
-
-Pages redeploys automatically on each push to `main`.
+The contact form remains in the UI and currently opens the visitor's email
+client. Set `messageFormAction` in `site.config.js` later to connect a hosted
+email-form service; no server or database is required by this site.

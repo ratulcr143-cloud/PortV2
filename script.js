@@ -10,6 +10,61 @@
     return /^https?:\/\//i.test(url);
   }
 
+  function setupFooterFeatures() {
+    const clock = document.getElementById("footer-clock");
+    const commit = document.getElementById("footer-commit");
+    const modal = document.getElementById("specs-modal");
+    const openButton = document.getElementById("footer-specs-open");
+    if (!clock || !commit || !modal || !openButton) return;
+
+    const updateClock = () => {
+      const now = new Date();
+      clock.textContent = `${now.toLocaleTimeString("en-IN", {
+        timeZone: "Asia/Kolkata",
+        hour12: false,
+      })} IST`;
+      clock.dateTime = now.toISOString();
+    };
+    updateClock();
+    const clockTimer = window.setInterval(updateClock, 1000);
+
+    fetch("https://api.github.com/repos/ratulcr143-cloud/PortV2/commits?per_page=1", {
+      headers: { Accept: "application/vnd.github+json" },
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error(`GitHub API returned ${response.status}`);
+        return response.json();
+      })
+      .then((commits) => {
+        const latest = commits[0];
+        const sha = latest?.sha?.slice(0, 7);
+        const message = latest?.commit?.message?.split("\n")[0];
+        if (sha && message) commit.textContent = `${sha} · ${message}`;
+      })
+      .catch((error) => {
+        console.warn("Unable to load the latest GitHub commit; using fallback.", error);
+      });
+
+    const closeButton = modal.querySelector(".specs-close");
+    const closeModal = () => {
+      modal.hidden = true;
+      document.body.classList.remove("specs-open");
+      openButton.focus({ preventScroll: true });
+    };
+    openButton.addEventListener("click", () => {
+      modal.hidden = false;
+      document.body.classList.add("specs-open");
+      closeButton.focus({ preventScroll: true });
+    });
+    modal.querySelectorAll("[data-specs-close]").forEach((el) => {
+      el.addEventListener("click", closeModal);
+    });
+    modal.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeModal();
+    });
+    window.addEventListener("beforeunload", () => window.clearInterval(clockTimer), { once: true });
+  }
+
   function applyProfile() {
     document.querySelectorAll('[data-profile="name"]').forEach((el) => {
       if (config.name) el.textContent = config.name;
@@ -30,13 +85,43 @@
     ];
     fields.forEach((key) => {
       document.querySelectorAll(`[data-profile="${key}"]`).forEach((el) => {
-        if (config[key]) el.textContent = config[key];
+        const val = config[key];
+        if (val) {
+          el.textContent = val;
+          el.hidden = false;
+        } else {
+          el.textContent = "";
+          el.hidden = true;
+        }
       });
     });
 
     const nowBlock = document.getElementById("hero-now");
     if (nowBlock) {
       nowBlock.hidden = !config.now;
+    }
+
+    const deck = document.getElementById("hero-deck");
+    const kicker = document.querySelector(".hero-deck-kicker");
+    const traitsEl = document.getElementById("hero-traits");
+    const traits = Array.isArray(config.heroTraits)
+      ? config.heroTraits.filter(Boolean)
+      : [];
+    if (traitsEl) {
+      traitsEl.innerHTML = traits
+        .map((t) => `<li>${escapeHtml(t)}</li>`)
+        .join("");
+      traitsEl.hidden = traits.length === 0;
+    }
+    if (kicker) {
+      kicker.hidden = !config.roleTitle;
+    }
+    if (deck) {
+      deck.hidden = !(
+        config.roleTitle ||
+        config.tagline ||
+        traits.length
+      );
     }
 
     const projectsIntro = document.getElementById("projects-intro");
@@ -104,7 +189,6 @@
 
   const SKILL_ICON_CDN =
     "https://cdn.jsdelivr.net/npm/simple-icons@11.14.0/icons";
-
   const SKILL_META = {
     java: { slug: "openjdk", brand: "#ED8B00" },
     python: { slug: "python", brand: "#3776AB" },
@@ -117,10 +201,15 @@
     vite: { slug: "vite", brand: "#646CFF" },
     nodejs: { slug: "nodedotjs", brand: "#339933" },
     fastapi: { slug: "fastapi", brand: "#009688" },
-    socketio: { slug: "socketdotio", brand: "#010101" },
+    socketio: {
+      slug: "socketdotio",
+      brand: "#010101",
+      glyph: "#f4f2ff",
+    },
     mongodb: { slug: "mongodb", brand: "#47A248" },
     postgresql: { slug: "postgresql", brand: "#4169E1" },
-    restapis: { slug: "openapi", brand: "#6BA539" },
+    restapis: { slug: "openapiinitiative", brand: "#6BA539" },
+    restapi: { slug: "openapiinitiative", brand: "#6BA539" },
     docker: { slug: "docker", brand: "#2496ED" },
     linux: { slug: "linux", brand: "#FCC624" },
     git: { slug: "git", brand: "#F05032" },
@@ -131,7 +220,6 @@
     ibm: { slug: "ibm", brand: "#052FAD" },
     figma: { slug: "figma", brand: "#F24E1E" },
     threejs: { slug: "threedotjs", brand: "#ffffff" },
-    firebase: { slug: "firebase", brand: "#FFCA28" },
     computernetworking: { slug: "cisco", brand: "#1BA0D7" },
     webgl: { slug: "webgl", brand: "#990000" },
     ollama: { slug: "ollama", brand: "#ffffff" },
@@ -151,11 +239,52 @@
         label: name,
         slug: meta.slug,
         brand: meta.brand,
+        glyph: meta.glyph,
         iconUrl: `${SKILL_ICON_CDN}/${meta.slug}.svg`,
       };
     }
     const initial = String(name).trim().charAt(0).toUpperCase() || "?";
     return { label: name, slug: null, brand: "#a78bfa", initial };
+  }
+
+  function serviceTechMaskUrl(iconUrl) {
+    return String(iconUrl).replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+  }
+
+  function softenedTechGlyphColor(brand) {
+    const hex = String(brand || "#a78bfa").replace(/^#/, "");
+    if (hex.length !== 6) return "#a78bfa";
+    const r = parseInt(hex.slice(0, 2), 16);
+    const g = parseInt(hex.slice(2, 4), 16);
+    const b = parseInt(hex.slice(4, 6), 16);
+    const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    if (lum < 0.25) return "#9eb4d4";
+    if (lum > 0.82) return "#e8d86a";
+    return `#${hex}`;
+  }
+
+  function renderServiceTechTag(name) {
+    const meta = resolveSkillMeta(name);
+    const glyphColor = meta.glyph || softenedTechGlyphColor(meta.brand);
+    const iconMarkup = brandGlyphMarkup(meta, {
+      glyphClass: "service-tech__glyph",
+      maskVar: "--tech-mask",
+      monoClass: "service-tech__mono",
+    });
+    return `<li class="service-tech" style="--tech-brand:${escapeAttr(meta.brand)};--tech-glyph:${escapeAttr(glyphColor)}" title="${escapeAttr(meta.label)}">
+      <span class="service-tech__icon">${iconMarkup}</span>
+      <span class="service-tech__name">${escapeHtml(meta.label)}</span>
+    </li>`;
+  }
+
+  function brandGlyphMarkup(meta, options = {}) {
+    const glyphClass = options.glyphClass || "skill-tile__glyph";
+    const maskVar = options.maskVar || "--skill-mask";
+    const monoClass = options.monoClass || "skill-tile__monogram";
+    if (!meta.iconUrl) {
+      return `<span class="${monoClass}" aria-hidden="true">${escapeHtml(meta.initial)}</span>`;
+    }
+    return `<span class="${glyphClass}" style="${maskVar}:url('${serviceTechMaskUrl(meta.iconUrl)}')" aria-hidden="true"></span>`;
   }
 
   function renderSkills() {
@@ -164,11 +293,10 @@
     list.innerHTML = config.skills
       .map((skill, i) => {
         const meta = resolveSkillMeta(skill);
-        const iconMarkup = meta.iconUrl
-          ? `<img class="skill-tile__img" src="${escapeAttr(meta.iconUrl)}" alt="" width="32" height="32" loading="lazy" decoding="async" />`
-          : `<span class="skill-tile__monogram" aria-hidden="true">${escapeHtml(meta.initial)}</span>`;
+        const glyphColor = meta.glyph || softenedTechGlyphColor(meta.brand);
+        const iconMarkup = brandGlyphMarkup(meta);
         return `
-        <li class="skill-tile" style="--i:${i};--skill-brand:${escapeAttr(meta.brand)}">
+        <li class="skill-tile" style="--i:${i};--skill-brand:${escapeAttr(meta.brand)};--skill-glyph:${escapeAttr(glyphColor)}" title="${escapeAttr(meta.label)}">
           <span class="skill-tile__glow" aria-hidden="true"></span>
           <span class="skill-tile__icon">${iconMarkup}</span>
           <span class="skill-tile__name">${escapeHtml(meta.label)}</span>
@@ -178,8 +306,10 @@
   }
 
   function renderServices() {
+    const intro = document.getElementById("services-intro");
     const grid = document.getElementById("services-grid");
     const services = config.services || [];
+    if (intro && config.servicesIntro) intro.textContent = config.servicesIntro;
     if (!grid || !services.length) {
       const section = document.getElementById("services");
       if (section) section.hidden = true;
@@ -195,8 +325,8 @@
           <p class="service-desc">${escapeHtml(item.description)}</p>
           ${
             item.tags?.length
-              ? `<ul class="service-tags">${item.tags
-                  .map((t) => `<li>${escapeHtml(t)}</li>`)
+              ? `<ul class="service-tags service-tags--tech" aria-label="Technologies">${item.tags
+                  .map((t) => renderServiceTechTag(t))
                   .join("")}</ul>`
               : ""
           }
@@ -406,21 +536,97 @@
   function renderTestimonials() {
     const section = document.getElementById("testimonials");
     const grid = document.getElementById("testimonials-grid");
+    const controls = document.getElementById("testimonials-controls");
+    const count = document.getElementById("testimonials-count");
     const items = config.testimonials || [];
-    if (!section || !grid || !items.length) return;
+    if (!section || !grid || !controls || !count || !items.length) return;
     section.hidden = false;
-    grid.innerHTML = items
-      .map(
-        (t, i) => `
-        <blockquote class="testimonial-card glass" style="--i:${i}">
+    controls.hidden = items.length < 2;
+
+    let activeIndex = 0;
+    let transitioning = false;
+    let pointerStartX = 0;
+    let pointerStartY = 0;
+    let pointerActive = false;
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    const renderCard = (index, state = "", direction = "next") => {
+      const t = items[index];
+      grid.innerHTML = `
+        <blockquote class="testimonial-card glass ${state}" data-direction="${direction}" tabindex="0">
           <p class="testimonial-quote">“${escapeHtml(t.quote)}”</p>
           <footer class="testimonial-footer">
             <cite class="testimonial-name">${escapeHtml(t.name)}</cite>
             <span class="testimonial-role">${escapeHtml([t.role, t.company].filter(Boolean).join(" · "))}</span>
           </footer>
         </blockquote>`
-      )
-      .join("");
+      count.textContent = `${index + 1} / ${items.length}`;
+    };
+
+    const setIndex = (nextIndex, direction) => {
+      if (transitioning || items.length < 2) return;
+      const index = (nextIndex + items.length) % items.length;
+      const current = grid.querySelector(".testimonial-card");
+      if (!current || index === activeIndex) return;
+
+      transitioning = true;
+      const finish = () => {
+        activeIndex = index;
+        renderCard(activeIndex, reducedMotion ? "" : "is-entering", direction);
+        if (!reducedMotion) {
+          requestAnimationFrame(() => {
+            const next = grid.querySelector(".testimonial-card");
+            if (next) next.classList.remove("is-entering");
+          });
+        }
+        transitioning = false;
+      };
+
+      if (reducedMotion) {
+        finish();
+        return;
+      }
+
+      current.classList.add("is-exiting", `is-exiting-${direction}`);
+      current.addEventListener("animationend", finish, { once: true });
+    };
+
+    const move = (direction) => {
+      setIndex(activeIndex + (direction === "next" ? 1 : -1), direction);
+    };
+
+    renderCard(activeIndex);
+    controls.querySelector("[data-testimonial-prev]").addEventListener("click", () => move("prev"));
+    controls.querySelector("[data-testimonial-next]").addEventListener("click", () => move("next"));
+    grid.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") move("prev");
+      if (event.key === "ArrowRight") move("next");
+    });
+    grid.addEventListener("pointerdown", (event) => {
+      pointerStartX = event.clientX;
+      pointerStartY = event.clientY;
+      pointerActive = true;
+      grid.setPointerCapture(event.pointerId);
+    });
+    grid.addEventListener("pointerup", (event) => {
+      if (!pointerActive) return;
+      pointerActive = false;
+      const deltaX = event.clientX - pointerStartX;
+      const deltaY = event.clientY - pointerStartY;
+      if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY)) {
+        move(deltaX < 0 ? "next" : "prev");
+      }
+    });
+    grid.addEventListener("pointercancel", () => {
+      pointerActive = false;
+    });
+    grid.addEventListener("wheel", (event) => {
+      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+      event.preventDefault();
+      move(event.deltaY > 0 ? "next" : "prev");
+    }, { passive: false });
   }
 
   function formatDate(iso) {
@@ -469,9 +675,9 @@
   }
 
   function setupMessageForm() {
-    const form = document.getElementById("message-form");
-    const status = document.getElementById("message-status");
-    const submitBtn = document.getElementById("message-submit");
+    const form = document.getElementById("contact-form");
+    const status = document.getElementById("contact-status");
+    const submitBtn = document.getElementById("contact-submit-btn");
     if (!form) return;
 
     const endpoint = config.messageFormAction?.trim();
@@ -479,13 +685,12 @@
     function showStatus(text, isError) {
       if (!status) return;
       status.textContent = text;
-      status.hidden = false;
-      status.classList.toggle("is-error", Boolean(isError));
-      status.classList.toggle("is-success", !isError);
+      status.style.color = isError ? "#f87171" : "#4ade80";
     }
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
+
       const honeypot = form.querySelector('[name="_gotcha"]');
       if (honeypot?.value) return;
 
@@ -494,13 +699,13 @@
         return;
       }
 
-      const name = form.name.value.trim();
-      const email = form.email.value.trim();
-      const message = form.message.value.trim();
+      const name = document.getElementById("form-name").value.trim();
+      const email = document.getElementById("form-email").value.trim();
+      const message = document.getElementById("form-message").value.trim();
 
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.querySelector("span").textContent = "Sending…";
+        submitBtn.querySelector("span").textContent = "SENDING...";
       }
 
       if (endpoint) {
@@ -516,14 +721,12 @@
             headers: { Accept: "application/json" },
             body,
           });
-          if (res.ok) {
-            showStatus("Thanks — your message was sent.", false);
-            form.reset();
-          } else {
-            showStatus("Something went wrong. Please try again or email me directly.", true);
-          }
-        } catch {
-          showStatus("Could not send. Check your connection or use the email link above.", true);
+          if (!res.ok) throw new Error(`Contact service returned ${res.status}`);
+          form.reset();
+          showStatus("Thanks — your message was sent.", false);
+        } catch (error) {
+          console.error("Contact form submission failed.", error);
+          showStatus("Could not send. Please email me directly.", true);
         }
       } else if (config.email) {
         const subject = encodeURIComponent(`Portfolio message from ${name}`);
@@ -538,7 +741,7 @@
 
       if (submitBtn) {
         submitBtn.disabled = false;
-        submitBtn.querySelector("span").textContent = "Send message";
+        submitBtn.querySelector("span").textContent = "SEND MESSAGE";
       }
     });
   }
@@ -559,13 +762,16 @@
   }
 
   function setupTilt() {
+    if (window.matchMedia("(pointer: coarse)").matches) return;
     document.querySelectorAll("[data-tilt]").forEach((card) => {
+      const isProject = card.classList.contains("project-card");
+      const tilt = isProject ? 12 : 10;
       card.addEventListener("pointermove", (e) => {
         const rect = card.getBoundingClientRect();
         const px = (e.clientX - rect.left) / rect.width - 0.5;
         const py = (e.clientY - rect.top) / rect.height - 0.5;
-        card.style.setProperty("--rx", `${-py * 10}deg`);
-        card.style.setProperty("--ry", `${px * 10}deg`);
+        card.style.setProperty("--rx", `${-py * tilt}deg`);
+        card.style.setProperty("--ry", `${px * tilt}deg`);
         const mx = ((e.clientX - rect.left) / rect.width) * 100;
         const my = ((e.clientY - rect.top) / rect.height) * 100;
         card.style.setProperty("--mx", `${mx}%`);
@@ -597,7 +803,7 @@
       delay: 0.35,
     });
 
-    gsap.from(".hero-role, .hero-lead, .hero-actions, .hero-meta, .chip, .hero-now", {
+    gsap.from(".hero-deck, .hero-actions, .hero-meta, .chip, .hero-now", {
       y: 30,
       opacity: 0,
       stagger: 0.08,
@@ -670,13 +876,13 @@
   if (common) {
     common.setupNav();
     common.setupScrollSpy();
-    common.setupCursor();
     common.setupLoader();
     common.setupFooterYear();
     common.setupBackToTop();
   }
 
   setupMessageForm();
+  setupFooterFeatures();
 
   requestAnimationFrame(() => {
     setupMagnetic();

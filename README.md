@@ -1,4 +1,4 @@
-# Portfolio V1 — 3D premium
+# PortV2 portfolio
 
 A responsive portfolio for **job search**, **freelance clients**, and **showcase** — Three.js hero scene, GSAP motion, services, testimonials, project filters, SEO, and config-driven content.
 
@@ -55,16 +55,21 @@ npx --yes serve d:\PortfolioV1 -l 3000
 
 Three.js, GSAP, and hero tech icons load from the internet on first visit.
 
-## Deploy
+## Deploy to GitHub Pages
 
-Upload the folder to Netlify, Vercel, or GitHub Pages. Set **`seo.siteUrl`** in `site.config.js` to your production URL (no trailing slash).
+Push the repository to GitHub and enable **Settings → Pages → GitHub Actions**.
+The workflow in `.github/workflows/pages.yml` deploys the repository root as a
+static site on pushes to `main`. The configured custom domain is
+`https://ratulcr.dev`.
+
+Run `npm run validate:frontend` locally to syntax-check the static JavaScript.
 
 ## Features
 
 - Scroll-spy navigation on the home page
 - Project tag filters
 - Open Graph, Twitter cards, JSON-LD `Person`, canonical URL
-- Form honeypot; Formspree-ready contact form
+- Form honeypot; hosted-email-service-ready contact form
 - Faster loader on repeat visits (`sessionStorage`)
 - **prefers-reduced-motion** — static layout without heavy WebGL/motion
 

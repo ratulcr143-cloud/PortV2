@@ -6,7 +6,6 @@
     applySiteName,
     applySeo,
     setupNav,
-    setupCursor,
     setupLoader,
     setupFooterYear,
     setupBackToTop,
@@ -194,7 +193,6 @@
   }
 
   setupNav();
-  setupCursor();
   setupLoader();
   setupFooterYear();
   setupBackToTop();

@@ -6,6 +6,11 @@ node_modules/
 .env.*
 *.pem
 *.key
+*.crt
+*.p12
+*.pfx
+credentials
+credentials.*
 
 # OS & editor
 .DS_Store

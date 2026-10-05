@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
     <meta
       name="description"
       content="Premium portfolio — projects, experience, services, resume, and contact."
@@ -25,10 +28,8 @@
       <div class="loader-bar"><span></span></div>
     </div>
 
-    <div class="cursor" id="cursor" aria-hidden="true"></div>
-    <div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
-
     <canvas id="webgl" aria-hidden="true"></canvas>
+    <canvas id="neural-background" aria-hidden="true"></canvas>
     <div class="vignette" aria-hidden="true"></div>
     <div class="grid-floor" aria-hidden="true"></div>
 
@@ -66,8 +67,7 @@
       <section class="hero" aria-labelledby="hero-heading">
         <div class="container hero-grid">
           <div class="hero-copy">
-            <p class="chip" data-profile="availability">Open to opportunities</p>
-            <p class="hero-role" data-profile="roleTitle"></p>
+            <p class="chip" data-profile="availability" hidden></p>
             <h1 id="hero-heading" class="hero-title">
               <span class="hero-line" data-profile="heroLine1">Crafting</span>
               <span class="hero-line hero-line--grad" data-profile="heroLine2"
@@ -77,10 +77,21 @@
                 >digital worlds.</span
               >
             </h1>
-            <p class="hero-lead" data-profile="tagline">
-              Developer focused on clean interfaces, reliable systems, and work
-              that ships.
-            </p>
+            <div class="hero-deck glass" id="hero-deck" hidden>
+              <div class="hero-deck-accent" aria-hidden="true"></div>
+              <div class="hero-deck-inner">
+                <p class="hero-deck-kicker">
+                  <span class="hero-deck-index" aria-hidden="true">01</span>
+                  <span data-profile="roleTitle"></span>
+                </p>
+                <p class="hero-deck-lead" data-profile="tagline"></p>
+                <ul
+                  class="hero-deck-traits"
+                  id="hero-traits"
+                  aria-label="Core strengths"
+                ></ul>
+              </div>
+            </div>
             <div class="hero-actions" id="hero-actions">
               <a class="btn btn-glow magnetic" href="#projects">
                 <span>Explore work</span>
@@ -130,10 +141,23 @@
           </header>
           <div class="about-grid">
             <div class="about-copy">
-              <p class="section-lead split-target" data-profile="about">
-                I'm a developer who cares about clarity — in code, in design, and in
-                how products feel to use.
-              </p>
+              <div class="about-copy-text split-target">
+                <p>
+                  I’m an MCA postgraduate with a specialization in
+                  <strong>Artificial Intelligence and Deep Learning</strong> (IBM
+                  collaboration). My focus is on engineering intelligent software
+                  solutions, combining core machine learning workflows with modern
+                  system architecture, clean code, and intuitive user experiences.
+                </p>
+                <p>
+                  Having completed engineering internships at <strong>IBM</strong> and
+                  <strong>Kareng Technologies</strong>, I bring hands-on experience
+                  bridging the gap between theoretical research and production
+                  systems. Whether it’s architecting ML pipelines, optimizing network
+                  performance, or crafting interactive web tools, I build with
+                  performance, reliability, and usability in mind.
+                </p>
+              </div>
               <div class="github-spotlight glass" id="github-highlight" hidden></div>
             </div>
             <div class="skills-showcase glass" data-tilt>
@@ -161,8 +185,9 @@
               <span class="section-index">02</span>
               <h2 id="services-heading" class="section-title">Services</h2>
             </div>
-            <p class="section-sub">
-              For teams hiring and clients who need a reliable build partner.
+            <p class="section-sub" id="services-intro">
+              Technical strengths aligned with my resume — AI/ML, full-stack
+              engineering, and systems-level delivery.
             </p>
           </header>
           <div class="services-grid" id="services-grid"></div>
@@ -220,7 +245,7 @@
             <div>
               <span class="section-index">05</span>
               <h2 id="education-heading" class="section-title">
-                Pursued &amp; pursuing
+                Academic background
               </h2>
             </div>
             <p class="section-sub" id="education-intro">
@@ -243,6 +268,27 @@
             <h2 id="testimonials-heading" class="section-title">Kind words</h2>
           </header>
           <div class="testimonials-grid" id="testimonials-grid"></div>
+          <div class="testimonials-controls" id="testimonials-controls" hidden>
+            <button
+              class="carousel-control"
+              type="button"
+              data-testimonial-prev
+              aria-label="Show previous testimonial"
+            >
+              <span aria-hidden="true">←</span>
+              <span class="sr-only">Previous</span>
+            </button>
+            <span class="testimonials-count" id="testimonials-count" aria-live="polite"></span>
+            <button
+              class="carousel-control"
+              type="button"
+              data-testimonial-next
+              aria-label="Show next testimonial"
+            >
+              <span aria-hidden="true">→</span>
+              <span class="sr-only">Next</span>
+            </button>
+          </div>
         </div>
       </section>
 
@@ -308,7 +354,7 @@
             <p class="message-lead" id="message-lead" data-profile="messageIntro">
               Have a question or want to work together? Drop a note below.
             </p>
-            <form class="message-form" id="message-form" novalidate>
+            <form class="message-form" id="contact-form" novalidate>
               <div class="field field-honeypot" aria-hidden="true">
                 <label for="message-company">Company</label>
                 <input
@@ -321,10 +367,10 @@
               </div>
               <div class="message-form-row">
                 <div class="field">
-                  <label for="message-name">Name</label>
+                  <label for="form-name">Name</label>
                   <input
                     type="text"
-                    id="message-name"
+                    id="form-name"
                     name="name"
                     autocomplete="name"
                     required
@@ -332,10 +378,10 @@
                   />
                 </div>
                 <div class="field">
-                  <label for="message-email">Email</label>
+                  <label for="form-email">Email</label>
                   <input
                     type="email"
-                    id="message-email"
+                    id="form-email"
                     name="email"
                     autocomplete="email"
                     required
@@ -344,9 +390,9 @@
                 </div>
               </div>
               <div class="field">
-                <label for="message-text">Message</label>
+                <label for="form-message">Message</label>
                 <textarea
-                  id="message-text"
+                  id="form-message"
                   name="message"
                   rows="5"
                   required
@@ -354,15 +400,13 @@
                 ></textarea>
               </div>
               <div class="message-form-footer">
-                <button type="submit" class="btn btn-glow magnetic" id="message-submit">
-                  <span>Send message</span>
+                <button type="submit" class="btn btn-glow magnetic" id="contact-submit-btn">
+                  <span>SEND DISPATCH</span>
                 </button>
                 <p
-                  class="message-status"
-                  id="message-status"
+                  id="contact-status"
                   role="status"
                   aria-live="polite"
-                  hidden
                 ></p>
               </div>
             </form>
@@ -373,21 +417,54 @@
 
     <footer class="site-footer">
       <div class="container footer-row">
-        <p>
-          <span data-profile="name">Ratul</span>
-          <span class="muted">·</span>
-          <span id="footer-year"></span>
-        </p>
-        <a href="#top" class="footer-link">Back to top ↑</a>
+        <div class="footer-identity">
+          <p><span data-profile="name">Ratul Ray</span> © 2026</p>
+          <span class="footer-status"><span class="footer-status-dot"></span>Open to Relocation &amp; Remote</span>
+          <time id="footer-clock" datetime="">--:--:-- IST</time>
+        </div>
+        <a
+          class="footer-repo"
+          href="https://github.com/ratulcr143-cloud/PortV2"
+          target="_blank"
+          rel="noopener noreferrer"
+          id="footer-repo"
+        >
+          <span>PortV2</span>
+          <span id="footer-commit">v2.4.1 · commit a9f2b01</span>
+        </a>
+        <div class="footer-actions">
+          <button class="footer-specs-button" type="button" id="footer-specs-open" aria-haspopup="dialog">
+            [ System Specs ]
+          </button>
+          <a href="#top" class="footer-link">Back to top ↑</a>
+        </div>
       </div>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <div class="specs-modal" id="specs-modal" hidden>
+      <div class="specs-modal-backdrop" data-specs-close></div>
+      <section class="specs-drawer glass" role="dialog" aria-modal="true" aria-labelledby="specs-title">
+        <button class="specs-close" type="button" aria-label="Close system specifications" data-specs-close>×</button>
+        <p class="section-index">SYSTEM / 01</p>
+        <h2 id="specs-title">System Specs</h2>
+        <ul>
+          <li><span>Rendering</span><strong>HTML5 Canvas 2D</strong></li>
+          <li><span>Runtime</span><strong>Vanilla JS</strong></li>
+          <li><span>Compositing</span><strong>CSS GPU Compositing</strong></li>
+          <li><span>Type system</span><strong>Space Grotesk / JetBrains Mono</strong></li>
+          <li><span>Deployment</span><strong>GitHub Pages</strong></li>
+          <li><span>Contact</span><strong>Email service ready</strong></li>
+        </ul>
+      </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="site.config.js"></script>
     <script src="common.js"></script>
     <script src="scene3d.js"></script>
+    <script src="neuralbackground.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

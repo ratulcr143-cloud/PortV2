@@ -48,26 +48,29 @@
     uniform float uTime;
     varying vec3 vColor;
     varying float vTwinkle;
+    varying float vGlow;
     uniform float uOpacity;
     void main() {
       vec4 viewPosition = modelViewMatrix * vec4(position, 1.0);
-      float pulse = 0.78 + 0.22 * sin(uTime * 1.15 + aPhase);
+      float pulse = 0.86 + 0.14 * sin(uTime * 1.15 + aPhase);
       vTwinkle = pulse;
+      vGlow = step(0.86, fract(aPhase * 2.73));
       vColor = aColor;
-      gl_PointSize = clamp(aSize * pulse * (82.0 / max(1.0, -viewPosition.z)), 0.7, 5.0);
+      gl_PointSize = clamp(aSize * (1.0 + vGlow * 0.35) * pulse * (88.0 / max(1.0, -viewPosition.z)), 0.85, 6.0);
       gl_Position = projectionMatrix * viewPosition;
     }
   `;
   const starFragmentShader = `
     varying vec3 vColor;
     varying float vTwinkle;
+    varying float vGlow;
     uniform float uOpacity;
     void main() {
       vec2 point = gl_PointCoord - vec2(0.5);
       float radius = length(point);
       float core = 1.0 - smoothstep(0.02, 0.28, radius);
       float halo = 1.0 - smoothstep(0.12, 0.5, radius);
-      float alpha = (core * 0.85 + halo * 0.28) * vTwinkle * uOpacity;
+      float alpha = (core * 0.98 + halo * (0.34 + vGlow * 0.16)) * vTwinkle * uOpacity;
       gl_FragColor = vec4(vColor, alpha);
     }
   `;
@@ -116,9 +119,9 @@
     starLayers.push({ points, material, parallax });
   }
 
-  createStarLayer(mobile ? 680 : 1500, -42, -82, 0.8, 2.0, 0.72, 0.12);
-  createStarLayer(mobile ? 270 : 650, -14, -42, 1.1, 2.8, 0.86, 0.3);
-  createStarLayer(mobile ? 70 : 180, -3, -15, 1.8, 4.2, 0.6, 0.58);
+  createStarLayer(mobile ? 680 : 1500, -42, -82, 0.95, 2.25, 0.88, 0.12);
+  createStarLayer(mobile ? 270 : 650, -14, -42, 1.25, 3.05, 0.98, 0.3);
+  createStarLayer(mobile ? 70 : 180, -3, -15, 1.95, 4.45, 0.72, 0.58);
 
 
   // Layered, curved meteor trails with a soft edge and bright ionized core.
@@ -370,6 +373,8 @@
 
     starLayers.forEach(({ points, material, parallax }, index) => {
       material.uniforms.uTime.value = elapsed;
+      points.position.z += dt * (0.45 + index * 0.2);
+      if (points.position.z > 12) points.position.z = -12;
       points.position.x = pointer.x * parallax * -0.5;
       points.position.y = pointer.y * parallax * 0.35;
       points.rotation.z = Math.sin(elapsed * 0.025 + index) * 0.002 + scrollProgress * 0.006 * (index + 1);
@@ -409,11 +414,6 @@
     renderer.dispose();
   }, { once: true });
 })();
-
-
-
-
-
 
 
 

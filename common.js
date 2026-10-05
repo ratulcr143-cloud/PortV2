@@ -32,21 +32,66 @@
     const header = document.querySelector(".site-header");
     if (!toggle || !menu) return;
 
+    const mobileMq = window.matchMedia("(max-width: 820px)");
+    let scrim = document.querySelector(".nav-scrim");
+    if (!scrim) {
+      scrim = document.createElement("button");
+      scrim.type = "button";
+      scrim.className = "nav-scrim";
+      scrim.hidden = true;
+      scrim.setAttribute("aria-label", "Close menu");
+      document.body.appendChild(scrim);
+    }
+
+    const closeNav = (opts = {}) => {
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-label", "Open menu");
+      menu.classList.remove("is-open");
+      document.body.classList.remove("nav-open");
+      scrim.hidden = true;
+      if (opts.focusToggle) {
+        toggle.focus({ preventScroll: true });
+      }
+    };
+
+    const openNav = () => {
+      toggle.setAttribute("aria-expanded", "true");
+      toggle.setAttribute("aria-label", "Close menu");
+      menu.classList.add("is-open");
+      document.body.classList.add("nav-open");
+      if (mobileMq.matches) scrim.hidden = false;
+    };
+
     toggle.addEventListener("click", () => {
       const open = toggle.getAttribute("aria-expanded") === "true";
-      toggle.setAttribute("aria-expanded", String(!open));
-      toggle.setAttribute("aria-label", open ? "Open menu" : "Close menu");
-      menu.classList.toggle("is-open", !open);
-      document.body.classList.toggle("nav-open", !open);
+      if (open) closeNav({ focusToggle: true });
+      else openNav();
     });
 
+    scrim.addEventListener("click", () => closeNav({ focusToggle: true }));
+
     menu.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", () => {
-        toggle.setAttribute("aria-expanded", "false");
-        menu.classList.remove("is-open");
-        document.body.classList.remove("nav-open");
-      });
+      link.addEventListener("click", () => closeNav());
     });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && document.body.classList.contains("nav-open")) {
+        e.preventDefault();
+        closeNav({ focusToggle: true });
+      }
+    });
+
+    const onViewportChange = () => {
+      if (!mobileMq.matches && document.body.classList.contains("nav-open")) {
+        closeNav();
+      }
+    };
+    if (typeof mobileMq.addEventListener === "function") {
+      mobileMq.addEventListener("change", onViewportChange);
+    } else if (typeof mobileMq.addListener === "function") {
+      mobileMq.addListener(onViewportChange);
+    }
+    window.addEventListener("resize", onViewportChange, { passive: true });
 
     window.addEventListener(
       "scroll",
@@ -66,43 +111,6 @@
         active.setAttribute("aria-current", "page");
       }
     }
-  }
-
-  function setupCursor() {
-    const ring = document.getElementById("cursor");
-    const dot = document.getElementById("cursor-dot");
-    if (!ring || !dot) return;
-    if (window.matchMedia("(pointer: coarse)").matches) {
-      ring.style.display = "none";
-      dot.style.display = "none";
-      return;
-    }
-
-    let x = 0;
-    let y = 0;
-    let rx = 0;
-    let ry = 0;
-
-    window.addEventListener("pointermove", (e) => {
-      x = e.clientX;
-      y = e.clientY;
-      dot.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
-    });
-
-    function loop() {
-      rx += (x - rx) * 0.15;
-      ry += (y - ry) * 0.15;
-      ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
-      requestAnimationFrame(loop);
-    }
-    loop();
-
-    document.querySelectorAll("a, button, .tilt-card, .blog-card, .filter-chip").forEach((el) => {
-      el.addEventListener("pointerenter", () => ring.classList.add("is-hover"));
-      el.addEventListener("pointerleave", () =>
-        ring.classList.remove("is-hover")
-      );
-    });
   }
 
   function absoluteUrl(path, siteUrl) {
@@ -475,8 +483,13 @@
         if (document.body.classList.contains("nav-open")) {
           const toggle = document.querySelector(".nav-toggle");
           const menu = document.getElementById("nav-menu");
-          if (toggle) toggle.setAttribute("aria-expanded", "false");
+          const scrim = document.querySelector(".nav-scrim");
+          if (toggle) {
+            toggle.setAttribute("aria-expanded", "false");
+            toggle.setAttribute("aria-label", "Open menu");
+          }
           if (menu) menu.classList.remove("is-open");
+          if (scrim) scrim.hidden = true;
           document.body.classList.remove("nav-open");
         }
       });
@@ -492,7 +505,6 @@
     absoluteUrl,
     setupNav,
     setupScrollSpy,
-    setupCursor,
     setupLoader,
     setupFooterYear,
     setupBackToTop,

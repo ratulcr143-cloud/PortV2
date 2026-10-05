@@ -1,19 +1,21 @@
 /** Edit this file to personalize your portfolio. */
 const SITE = {
   name: "Ratul Ray",
-  roleTitle: "MCA · AI & Deep Learning (IBM) · Full-stack & AIML",
   heroLine1: "Crafting",
   heroLine2: "immersive",
   heroLine3: "digital worlds.",
+  roleTitle: "AI/ML engineer · full-stack developer",
   tagline:
-    "I design and ship AI-driven web products — from conversational assistants and real-time apps to geospatial disaster intelligence.",
-  availability: "Open to internships · Full-time · Remote",
-  now:
-    "Pursuing MCA (AI & Deep Learning, IBM) at Assam Downtown University — building JENNIE, SURAKSHA AI, and full-stack projects.",
+    "I ship intelligent products end to end—models, APIs, and interfaces that stay clear under real-world load.",
+  heroTraits: [
+    "Conversational AI",
+    "Geospatial intelligence",
+    "IBM Deep Learning",
+  ],
   focus: "AI/ML · Full-stack · Product engineering",
   location: "Guwahati, Assam · Remote-friendly",
   about:
-    "Postgraduate student in MCA with specialization in Artificial Intelligence and Deep Learning (IBM collaboration). Strong foundation in programming, machine learning, networking, and system design — with hands-on experience from IBM and Kareng Technologies internships and research-led builds.",
+    "I’m an MCA postgraduate with a specialization in Artificial Intelligence and Deep Learning (IBM collaboration). My focus is on engineering intelligent software solutions, combining core machine learning workflows with modern system architecture, clean code, and intuitive user experiences. Having completed engineering internships at IBM and Kareng Technologies, I bring hands-on experience bridging the gap between theoretical research and production systems. Whether it’s architecting ML pipelines, optimizing network performance, or crafting interactive web tools, I build with performance, reliability, and usability in mind.",
   email: "ratulcr143@gmail.com",
   bookCallUrl: "",
   bookCallLabel: "Book a call",
@@ -25,7 +27,7 @@ const SITE = {
     "Selected builds with measurable outcomes. Filter by stack or open a live demo.",
   seo: {
     /** Set to your live URL when deployed (no trailing slash). Used for OG URLs & sitemap. */
-    siteUrl: "",
+    siteUrl: "https://ratulcr.dev",
     description:
       "Ratul Ray — AI/ML & full-stack developer. Projects, experience, resume, and contact.",
     ogImage: "assets/og-cover.svg",
@@ -44,7 +46,7 @@ const SITE = {
     lastUpdated: "2026-03-01",
     intro: "View or download my resume (PDF) below.",
     phone: "9365409125",
-    portfolioUrl: "https://ray-systems-portfolio.web.app",
+    portfolioUrl: "https://ratulcr.dev",
     summary:
       "Postgraduate student pursuing a Master of Computer Applications (MCA) with specialization in Artificial Intelligence and Deep Learning (IBM Collaboration) at Assam Downtown University. Strong academic foundation in programming, machine learning, computer networking, and system logic. Demonstrated ability to design and implement AI-driven solutions through research projects and internships. Motivated to apply advanced AI and deep learning techniques to real-world problem statements.",
     achievements: [
@@ -102,30 +104,32 @@ const SITE = {
     url: "https://github.com",
     label: "View source",
   },
+  servicesIntro:
+    "Technical strengths aligned with my resume — AI/ML, full-stack engineering, and systems-level delivery.",
   services: [
     {
-      title: "Web applications",
+      title: "AI & deep learning",
       description:
-        "Dashboards, SaaS flows, and marketing sites with polished UX, auth, and production deploys.",
-      tags: ["React", "TypeScript", "Node"],
+        "MCA specialization in AI and Deep Learning (IBM). Machine learning with Python — data preprocessing, model development, training, and evaluation — plus conversational and intelligent product builds.",
+      tags: ["Python", "PyTorch", "Machine Learning", "IBM"],
     },
     {
-      title: "APIs & integrations",
+      title: "Full-stack web development",
       description:
-        "REST and event-driven backends, third-party integrations, and documentation your team can trust.",
-      tags: ["Node", "PostgreSQL", "OpenAPI"],
+        "Responsive web applications across frontend and backend: UI implementation, database integration, REST APIs, debugging, and testing — from IBM internship work to React and TypeScript projects.",
+      tags: ["React", "TypeScript", "JavaScript", "Vite"],
     },
     {
-      title: "MVPs & prototypes",
+      title: "Backends, APIs & real-time apps",
       description:
-        "Scope to a shippable v1 in weeks — clear milestones, weekly demos, and handoff you can extend.",
-      tags: ["Full-stack", "Rapid delivery"],
+        "Server-side logic with Node.js and FastAPI, REST APIs, and real-time messaging. Experience shipping data-heavy systems including geospatial disaster intelligence (SURAKSHA AI).",
+      tags: ["FastAPI", "Node.js", "Socket.io", "REST APIs"],
     },
     {
-      title: "Performance & quality",
+      title: "Data, mobile & systems",
       description:
-        "Audits for Core Web Vitals, bundle size, and reliability — with a prioritized fix list.",
-      tags: ["Profiling", "A11y", "DX"],
+        "MongoDB and PostgreSQL, Docker and Linux workflows, computer networking fundamentals, and mobile development with Android Studio — grounded in a B.Sc. IT focus on mobile apps and information security.",
+      tags: ["MongoDB", "PostgreSQL", "Docker", "Android Studio"],
     },
   ],
   testimonials: [
@@ -234,7 +238,6 @@ const SITE = {
     "IBM",
     "Figma",
     "Three.js",
-    "Firebase",
     "Computer Networking",
   ],
   experience: [
@@ -247,6 +250,28 @@ const SITE = {
       highlights: [
         "Built responsive web applications across the stack.",
         "Database integration, API implementation, debugging, and testing.",
+      ],
+    },
+    {
+      role: "Participant — Smart India Hackathon 2026",
+      company: "SIH26206 · Disaster Management (Software)",
+      period: "2026",
+      description:
+        "Competed in Smart India Hackathon with SURAKSHA AI — a real-time disaster risk intelligence platform for assessment, monitoring, and response planning.",
+      highlights: [
+        "Integrated live APIs, government warning feeds, and geospatial risk visualization.",
+        "Built interactive maps, safe-route recommendations, and a full-stack React + FastAPI stack.",
+      ],
+    },
+    {
+      role: "Participant — NASA Space Apps Challenge 2026",
+      company: "NASA International Space Apps Challenge",
+      period: "2026",
+      description:
+        "Joined the global hackathon challenge “Be An Earth System Trend Detective!” — working with NASA Earth-system data to surface environmental trends.",
+      highlights: [
+        "Explored temporal and regional patterns in Earth observation datasets.",
+        "Produced data-driven visualizations and analysis of statistical significance in observed changes.",
       ],
     },
     {
@@ -320,7 +345,7 @@ const SITE = {
     },
     {
       label: "Portfolio",
-      url: "https://ray-systems-portfolio.web.app",
+      url: "https://ratulcr.dev",
     },
     { label: "Email", url: "mailto:ratulcr143@gmail.com" },
   ],
