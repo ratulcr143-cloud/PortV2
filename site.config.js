@@ -33,12 +33,6 @@ const SITE = {
     ogImage: "assets/og-cover.svg",
     twitterHandle: "",
   },
-  /**
-   * Optional: Formspree (or similar) endpoint for real submissions.
-   * Example: "https://formspree.io/f/your-form-id"
-   * Leave empty to open the visitor's email app with a pre-filled message.
-   */
-  messageFormAction: "",
   resume: {
     file: "assets/resume.pdf",
     downloadName: "Ratul-Ray-Resume.pdf",

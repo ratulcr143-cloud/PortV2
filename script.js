@@ -680,7 +680,10 @@
     const submitBtn = document.getElementById("contact-submit-btn");
     if (!form) return;
 
-    const endpoint = config.messageFormAction?.trim();
+    const endpoint =
+      "https://send.pageclip.co/fxRTCVJGmwo1tltT6qbXyeIRpr4GRN1B";
+    form.removeAttribute("action");
+    form.removeAttribute("method");
 
     function showStatus(text, isError) {
       if (!status) return;
@@ -700,43 +703,26 @@
       }
 
       const name = document.getElementById("form-name").value.trim();
-      const email = document.getElementById("form-email").value.trim();
-      const message = document.getElementById("form-message").value.trim();
+      const subject = form.querySelector('[name="subject"]');
+      if (subject) subject.value = `Portfolio message from ${name}`;
 
       if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.querySelector("span").textContent = "SENDING...";
       }
 
-      if (endpoint) {
-        try {
-          const body = new FormData();
-          body.append("name", name);
-          body.append("email", email);
-          body.append("message", message);
-          body.append("_subject", `Portfolio message from ${name}`);
-
-          const res = await fetch(endpoint, {
-            method: "POST",
-            headers: { Accept: "application/json" },
-            body,
-          });
-          if (!res.ok) throw new Error(`Contact service returned ${res.status}`);
-          form.reset();
-          showStatus("Thanks — your message was sent.", false);
-        } catch (error) {
-          console.error("Contact form submission failed.", error);
-          showStatus("Could not send. Please email me directly.", true);
-        }
-      } else if (config.email) {
-        const subject = encodeURIComponent(`Portfolio message from ${name}`);
-        const body = encodeURIComponent(
-          `Name: ${name}\nEmail: ${email}\n\n${message}`
-        );
-        window.location.href = `mailto:${config.email}?subject=${subject}&body=${body}`;
-        showStatus("Opening your email app to send the message.", false);
-      } else {
-        showStatus("Message form is not configured yet.", true);
+      try {
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { Accept: "application/json" },
+          body: new FormData(form),
+        });
+        if (!res.ok) throw new Error(`Pageclip returned ${res.status}`);
+        form.reset();
+        showStatus("Thanks — your message was sent.", false);
+      } catch (error) {
+        console.error("Contact form submission failed.", error);
+        showStatus("Could not send. Please try again.", true);
       }
 
       if (submitBtn) {

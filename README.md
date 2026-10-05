@@ -9,7 +9,7 @@ Edit **`site.config.js`** for:
 | Area | Keys |
 |------|------|
 | Identity | `name`, `roleTitle`, `heroLine*`, `tagline`, `availability`, `now` |
-| Hire & contact | `email`, `bookCallUrl`, `contactLead`, `messageFormAction` |
+| Hire & contact | `email`, `bookCallUrl`, `contactLead` |
 | SEO | `seo.siteUrl`, `seo.description`, `seo.ogImage`, `seo.twitterHandle` |
 | Freelance | `services[]`, `testimonials[]` |
 | Work | `experience[]` (+ `highlights[]`), `projects[]` (+ `outcome`, `liveUrl`, `repoUrl`, `image`, `featured`) |
@@ -69,7 +69,7 @@ Run `npm run validate:frontend` locally to syntax-check the static JavaScript.
 - Scroll-spy navigation on the home page
 - Project tag filters
 - Open Graph, Twitter cards, JSON-LD `Person`, canonical URL
-- Form honeypot; hosted-email-service-ready contact form
+- Form honeypot; Pageclip contact form
 - Faster loader on repeat visits (`sessionStorage`)
 - **prefers-reduced-motion** — static layout without heavy WebGL/motion
 

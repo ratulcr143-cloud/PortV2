@@ -13,6 +13,5 @@ In the repository settings, set **Pages → Build and deployment → Source** to
 `ratulcr.dev`; point the domain's DNS at GitHub Pages as described in GitHub's
 custom-domain documentation.
 
-The contact form remains in the UI and currently opens the visitor's email
-client. Set `messageFormAction` in `site.config.js` later to connect a hosted
-email-form service; no server or database is required by this site.
+The contact form submits asynchronously to Pageclip; no server or database is
+required by this site.
