@@ -679,7 +679,7 @@ main {
 
 .hero {
   position: relative;
-  min-height: 100vh;
+  min-height: 100svh;
   min-height: 100dvh;
   display: flex;
   align-items: center;
@@ -2151,6 +2151,8 @@ main {
   resize: vertical;
   min-height: 0;
   cursor: text;
+  scroll-margin-top: calc(var(--header-h) + 1rem);
+  touch-action: manipulation;
 }
 
 .message-form textarea {
@@ -3427,4 +3429,74 @@ video {
 
 .page-main .container {
   width: min(100% - 2 * var(--page-gutter), var(--max));
+}
+
+@media (max-width: 640px) {
+  html,
+  body {
+    max-width: 100%;
+  }
+
+  .nav {
+    padding-inline: 0.75rem;
+  }
+
+  .page-main {
+    padding-top: calc(var(--header-h) + 0.5rem);
+  }
+
+  .page-hero {
+    padding-top: 1.5rem;
+  }
+
+  .section {
+    padding-block: clamp(3rem, 12vw, 4.5rem);
+  }
+
+  .message-panel {
+    padding: 1.25rem;
+  }
+
+  .message-form input,
+  .message-form textarea {
+    font-size: 1rem;
+  }
+
+  .contact-email {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .service-tech__name {
+    max-width: none;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    white-space: normal;
+    font-size: 0.75rem;
+  }
+
+  .skills-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+    grid-auto-flow: row;
+    gap: 0.55rem;
+  }
+
+  .skill-tile {
+    min-height: 4.25rem;
+    padding: 0.55rem 0.4rem;
+  }
+
+  .skill-tile__name {
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    white-space: normal;
+    font-size: 0.75rem;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 640px) {
+  .skills-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }

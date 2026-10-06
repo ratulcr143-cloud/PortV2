@@ -27,8 +27,13 @@
     window.dispatchEvent(new Event("webgl-ready"));
     return;
   }
-  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, mobile ? 1.5 : 2));
-  renderer.setSize(innerWidth, innerHeight);
+  const getViewportSize = () => ({
+    width: Math.max(1, Math.round(window.visualViewport?.width || innerWidth)),
+    height: Math.max(1, Math.round(window.visualViewport?.height || innerHeight)),
+  });
+  const viewport = getViewportSize();
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, mobile ? 1.25 : 2));
+  renderer.setSize(viewport.width, viewport.height);
   renderer.setClearColor(0x000000, 0);
   if ("outputColorSpace" in renderer && THREE.SRGBColorSpace) {
     renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -386,15 +391,18 @@
 
   function onResize() {
     mobile = window.matchMedia("(max-width: 768px)").matches;
-    camera.aspect = innerWidth / innerHeight;
+    const nextViewport = getViewportSize();
+    camera.aspect = nextViewport.width / nextViewport.height;
     camera.updateProjectionMatrix();
-    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, mobile ? 1.5 : 2));
-    renderer.setSize(innerWidth, innerHeight);
+    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, mobile ? 1.25 : 2));
+    renderer.setSize(nextViewport.width, nextViewport.height);
     starLayers.forEach(({ points }) => {
       points.scale.x = camera.aspect / initialAspect;
     });
   }
   window.addEventListener("resize", onResize, { passive: true });
+  window.addEventListener("orientationchange", onResize, { passive: true });
+  window.visualViewport?.addEventListener("resize", onResize, { passive: true });
 
 
   animate();
@@ -407,6 +415,8 @@
     window.removeEventListener("pointermove", onPointerMove);
     window.removeEventListener("scroll", onScroll);
     window.removeEventListener("resize", onResize);
+    window.removeEventListener("orientationchange", onResize);
+    window.visualViewport?.removeEventListener("resize", onResize);
     scene.traverse((object) => {
       if (object.geometry) object.geometry.dispose();
       if (object.material) object.material.dispose();
@@ -414,6 +424,5 @@
     renderer.dispose();
   }, { once: true });
 })();
-
 
 

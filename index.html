@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+      content="width=device-width, initial-scale=1"
     />
     <meta
       name="description"
@@ -356,8 +356,10 @@
               Have a question or want to work together? Drop a note below.
             </p>
             <form
-              class="message-form"
+              class="message-form pageclip-form"
               id="contact-form"
+              action="https://send.pageclip.co/fxRTCVJGmwo1tltT6qbXyeIRpr4GRN1B"
+              method="post"
               novalidate
             >
               <div class="field field-honeypot" aria-hidden="true">
@@ -406,7 +408,11 @@
                 ></textarea>
               </div>
               <div class="message-form-footer">
-                <button type="submit" class="btn btn-glow magnetic" id="contact-submit-btn">
+                <button
+                  type="submit"
+                  class="btn btn-glow magnetic pageclip-form__submit"
+                  id="contact-submit-btn"
+                >
                   <span>SEND DISPATCH</span>
                 </button>
                 <p

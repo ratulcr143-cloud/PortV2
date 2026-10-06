@@ -674,64 +674,6 @@
       .join("");
   }
 
-  function setupMessageForm() {
-    const form = document.getElementById("contact-form");
-    const status = document.getElementById("contact-status");
-    const submitBtn = document.getElementById("contact-submit-btn");
-    if (!form) return;
-
-    const endpoint =
-      "https://send.pageclip.co/fxRTCVJGmwo1tltT6qbXyeIRpr4GRN1B";
-    form.removeAttribute("action");
-    form.removeAttribute("method");
-
-    function showStatus(text, isError) {
-      if (!status) return;
-      status.textContent = text;
-      status.style.color = isError ? "#f87171" : "#4ade80";
-    }
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const honeypot = form.querySelector('[name="_gotcha"]');
-      if (honeypot?.value) return;
-
-      if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-      }
-
-      const name = document.getElementById("form-name").value.trim();
-      const subject = form.querySelector('[name="subject"]');
-      if (subject) subject.value = `Portfolio message from ${name}`;
-
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.querySelector("span").textContent = "SENDING...";
-      }
-
-      try {
-        const res = await fetch(endpoint, {
-          method: "POST",
-          headers: { Accept: "application/json" },
-          body: new FormData(form),
-        });
-        if (!res.ok) throw new Error(`Pageclip returned ${res.status}`);
-        form.reset();
-        showStatus("Thanks — your message was sent.", false);
-      } catch (error) {
-        console.error("Contact form submission failed.", error);
-        showStatus("Could not send. Please try again.", true);
-      }
-
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.querySelector("span").textContent = "SEND MESSAGE";
-      }
-    });
-  }
-
   function setupMagnetic() {
     if (window.matchMedia("(pointer: coarse)").matches) return;
     document.querySelectorAll(".magnetic").forEach((el) => {
@@ -867,7 +809,6 @@
     common.setupBackToTop();
   }
 
-  setupMessageForm();
   setupFooterFeatures();
 
   requestAnimationFrame(() => {
