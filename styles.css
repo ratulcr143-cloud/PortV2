@@ -2206,6 +2206,42 @@ main {
   transition: opacity 0.25s ease;
 }
 
+.message-form.pageclip-form .pageclip-form__success {
+  position: static;
+  display: block;
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(110, 231, 183, 0.3);
+  border-radius: 12px;
+  background: rgba(16, 35, 34, 0.72);
+  color: var(--text);
+  text-align: left;
+}
+
+.message-form.pageclip-form .pageclip-form__success__message {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.65rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  text-align: left;
+  transform: none;
+  animation: none;
+}
+
+.message-form.pageclip-form .pageclip-form__success__message strong {
+  color: #6ee7b7;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+}
+
+.message-form.pageclip-form .pageclip-form__success__message span {
+  color: var(--muted);
+}
+
 .testimonials-grid {
   overflow: hidden;
   touch-action: pan-y;

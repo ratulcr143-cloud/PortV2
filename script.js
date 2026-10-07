@@ -65,6 +65,29 @@
     window.addEventListener("beforeunload", () => window.clearInterval(clockTimer), { once: true });
   }
 
+  function setupPageclipSuccessState() {
+    const form = document.getElementById("contact-form");
+    if (!form) return;
+
+    const updateSuccessMessage = () => {
+      const success = form.querySelector(".pageclip-form__success");
+      const message = success?.querySelector(".pageclip-form__success__message");
+      if (!message || message.dataset.portfolioMessage === "true") return;
+
+      message.textContent = "";
+      const title = document.createElement("strong");
+      title.textContent = "MESSAGE RECEIVED";
+      const detail = document.createElement("span");
+      detail.textContent = "Thanks for reaching out. I’ll get back to you soon.";
+      message.append(title, detail);
+      message.dataset.portfolioMessage = "true";
+    };
+
+    const observer = new MutationObserver(updateSuccessMessage);
+    observer.observe(form, { childList: true });
+    updateSuccessMessage();
+  }
+
   function applyProfile() {
     document.querySelectorAll('[data-profile="name"]').forEach((el) => {
       if (config.name) el.textContent = config.name;
@@ -810,6 +833,7 @@
   }
 
   setupFooterFeatures();
+  setupPageclipSuccessState();
 
   requestAnimationFrame(() => {
     setupMagnetic();
