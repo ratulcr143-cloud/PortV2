@@ -3431,7 +3431,7 @@ video {
   width: min(100% - 2 * var(--page-gutter), var(--max));
 }
 
-@media (max-width: 640px) {
+@media (max-width: 767px) {
   html,
   body {
     max-width: 100%;
@@ -3483,20 +3483,26 @@ video {
   }
 
   .skill-tile {
-    min-height: 4.25rem;
-    padding: 0.55rem 0.4rem;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 0.55rem;
+    min-height: 3.25rem;
+    padding: 0.45rem 0.5rem;
+    text-align: left;
+  }
+
+  .skill-tile__icon {
+    width: 1.65rem;
+    height: 1.65rem;
   }
 
   .skill-tile__name {
+    flex: 1 1 auto;
+    min-width: 0;
     overflow-wrap: anywhere;
     text-overflow: clip;
     white-space: normal;
+    text-align: left;
     font-size: 0.75rem;
-  }
-}
-
-@media (min-width: 480px) and (max-width: 640px) {
-  .skills-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
