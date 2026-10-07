@@ -83,6 +83,110 @@ body.nav-open {
   overflow: hidden;
 }
 
+.maintenance-page {
+  display: none;
+}
+
+body.maintenance-mode {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 76% 18%, rgba(31, 45, 68, 0.16), transparent 34rem),
+    #05070c;
+  cursor: auto;
+}
+
+body.maintenance-mode > *:not(.maintenance-page) {
+  display: none !important;
+}
+
+body.maintenance-mode .maintenance-page {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: clamp(2rem, 7vw, 6rem) var(--page-gutter);
+  overflow: hidden;
+}
+
+.maintenance-page__inner {
+  width: min(100%, 56rem);
+  padding-block: clamp(2rem, 8vw, 5rem);
+}
+
+.maintenance-page__eyebrow,
+.maintenance-page__status,
+.maintenance-page__copyright {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: clamp(0.65rem, 1vw, 0.78rem);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+.maintenance-page__eyebrow {
+  color: var(--text);
+}
+
+.maintenance-page__rule {
+  width: min(100%, 8rem);
+  height: 1px;
+  margin: clamp(1.5rem, 4vw, 2.75rem) 0;
+  background: var(--cyan);
+  opacity: 0.5;
+  transform-origin: left;
+  animation: maintenance-rule 1.2s var(--ease) both;
+}
+
+.maintenance-page h1 {
+  max-width: 48rem;
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: clamp(2.3rem, 8vw, 6.6rem);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.maintenance-page__status {
+  margin-bottom: clamp(1.25rem, 3vw, 2rem);
+  color: var(--cyan);
+}
+
+.maintenance-page__message {
+  max-width: 34rem;
+  margin: clamp(1.75rem, 5vw, 3.25rem) 0 0;
+  color: var(--muted);
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  line-height: 1.65;
+}
+
+.maintenance-page__copyright {
+  margin-top: clamp(4rem, 12vw, 8rem);
+  color: rgba(148, 144, 168, 0.7);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+}
+
+@keyframes maintenance-rule {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  to {
+    opacity: 0.5;
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .maintenance-page__rule {
+    animation: none;
+  }
+}
+
 @media (pointer: coarse) {
   body {
     cursor: auto;
