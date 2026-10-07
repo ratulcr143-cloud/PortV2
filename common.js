@@ -265,21 +265,35 @@
     const loader = document.getElementById("loader");
     if (!loader) return;
 
-    const seen = sessionStorage.getItem("portfolio:seen") === "1";
+    let seen = false;
+    try {
+      seen = sessionStorage.getItem("portfolio:seen") === "1";
+    } catch (error) {
+      console.warn("Session storage is unavailable; using the default loader.", error);
+    }
     if (seen) loader.classList.add("is-fast");
 
     const hide = () => {
       loader.classList.add("is-done");
       document.body.classList.add("is-loaded");
-      sessionStorage.setItem("portfolio:seen", "1");
+      try {
+        sessionStorage.setItem("portfolio:seen", "1");
+      } catch (error) {
+        console.warn("Session storage is unavailable; loader state was not cached.", error);
+      }
       setTimeout(() => loader.remove(), seen ? 400 : 800);
     };
 
-    const fontsReady = document.fonts?.ready ?? Promise.resolve();
     const skipWebgl = document.body.dataset.skipWebgl === "true";
+    if (skipWebgl) {
+      hide();
+      return;
+    }
+
+    const fontsReady = document.fonts?.ready ?? Promise.resolve();
     const webglReady = new Promise((resolve) => {
       if (
-        skipWebgl ||
+        window.__portfolioWebglReady ||
         window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
         typeof THREE === "undefined" ||
         !document.getElementById("webgl")
@@ -440,6 +454,10 @@
     function measure() {
       raf = 0;
       if (reduced) return;
+      if (window.scrollY <= 1) {
+        targets.forEach((el) => el.style.removeProperty("opacity"));
+        return;
+      }
       const { fadeStart, fadeEnd } = fadeBounds();
       targets.forEach((el) => applyOpacity(el, fadeStart, fadeEnd));
     }

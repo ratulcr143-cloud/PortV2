@@ -1,4 +1,5 @@
 (() => {
+  if (document.body?.dataset.editorialBackground === "true") return;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   const canvas = document.getElementById("neural-background");

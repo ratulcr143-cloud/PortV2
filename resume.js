@@ -433,20 +433,27 @@
     if (typeof gsap === "undefined") return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     gsap.registerPlugin(ScrollTrigger);
-    gsap.from(".page-hero-inner > *", {
-      y: 36,
-      opacity: 0,
-      stagger: 0.08,
-      duration: 0.85,
-      ease: "power3.out",
-      delay: 0.2,
-    });
-    gsap.from(".resume-viewer", {
-      scrollTrigger: { trigger: ".resume-viewer", start: "top 88%" },
-      y: 28,
-      duration: 0.85,
-      ease: "power3.out",
-    });
+    const pageHeroItems = document.querySelectorAll(".page-hero-inner > *");
+    if (pageHeroItems.length) {
+      gsap.from(pageHeroItems, {
+        y: 36,
+        opacity: 0,
+        stagger: 0.08,
+        duration: 0.85,
+        ease: "power3.out",
+        delay: 0.2,
+      });
+    }
+
+    const resumeViewer = document.querySelector(".resume-viewer");
+    if (resumeViewer) {
+      gsap.from(resumeViewer, {
+        scrollTrigger: { trigger: resumeViewer, start: "top 88%" },
+        y: 28,
+        duration: 0.85,
+        ease: "power3.out",
+      });
+    }
   }
 
   initResume();

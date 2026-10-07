@@ -156,14 +156,17 @@
 
     gsap.registerPlugin(ScrollTrigger);
 
-    gsap.from(".page-hero-inner > *", {
-      y: 36,
-      opacity: 0,
-      stagger: 0.08,
-      duration: 0.85,
-      ease: "power3.out",
-      delay: 0.2,
-    });
+    const pageHeroItems = document.querySelectorAll(".page-hero-inner > *");
+    if (pageHeroItems.length) {
+      gsap.from(pageHeroItems, {
+        y: 36,
+        opacity: 0,
+        stagger: 0.08,
+        duration: 0.85,
+        ease: "power3.out",
+        delay: 0.2,
+      });
+    }
 
     gsap.utils.toArray(".blog-card, .post-article").forEach((el) => {
       gsap.from(el, {
